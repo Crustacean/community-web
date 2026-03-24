@@ -47,7 +47,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh "kubectl rollout restart deployment community-web"
+                    sh "kubectl rollout restart deployment community-web --v=9"
                     sh "kubectl rollout status deployment community-web"
                 }
             }
