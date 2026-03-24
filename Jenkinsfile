@@ -53,10 +53,10 @@ pipeline {
                 withCredentials([file(credentialsId: 'k8s-config-id', variable: 'KUBECONFIG_FILE')]) {
                     script {
                         // Triggers a rolling update using the provided credential [cite: 14]
-                        sh "kubectl --kubeconfig ${KUBECONFIG_FILE} rollout restart deployment community-web"
+                        sh 'kubectl --kubeconfig ${KUBECONFIG_FILE} rollout restart deployment community-web'
                         
                         // Monitors the rollout progress in the Jenkins console
-                        sh "kubectl --kubeconfig ${KUBECONFIG_FILE} rollout status deployment community-web"
+                        sh 'kubectl --kubeconfig ${KUBECONFIG_FILE} rollout status deployment community-web'
                     }
                 }
             }
