@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = "ghcr.io"
-        IMAGE_NAME = "ghcr.io/em22435/community-watch-web".toLowerCase()
+        REGISTRY = ""
+        IMAGE_NAME = "em22435/community-watch-web".toLowerCase()
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
@@ -22,12 +22,13 @@ pipeline {
             }
         }
 
-        stage('Push to GHCR') {
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry("https://${REGISTRY}", 'github-token-id') {
-                        dockerImage.push()
-                        dockerImage.push("latest")
+                    // Ensure 'docker-hub-credentials' matches the ID in Jenkins Credentials
+                    docker.withRegistry("", 'docker-hub-credentials') { 
+                        dockerImage.push() [cite: 5]
+                        dockerImage.push("latest") [cite: 6]
                     }
                 }
             }
