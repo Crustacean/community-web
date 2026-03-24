@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REGISTRY = "ghcr.io"
-        IMAGE_NAME = "ghcr.io/em22435/community-watch-web"
+        IMAGE_NAME = "ghcr.io/em22435/community-watch-web".toLowerCase()
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
