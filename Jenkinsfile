@@ -47,8 +47,8 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh "kubectl rollout restart deployment community-web --v=9"
-                    sh "kubectl rollout status deployment community-web"
+                    sh "kubectl --kubeconfig ${WORKSPACE}/config rollout restart deployment community-web --v=9"
+                    sh "kubectl --kubeconfig ${WORKSPACE}/config rollout status deployment community-web"
                 }
             }
         }
