@@ -46,9 +46,13 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    sh "kubectl --kubeconfig ${WORKSPACE}/config rollout restart deployment community-web --v=9"
-                    sh "kubectl --kubeconfig ${WORKSPACE}/config rollout status deployment community-web"
+                // 'k8s-config-id' must match the 'ID' you gave the credential in Jenkins
+                withCredentials([file(credentialsId: 'k8s-config-id', variable: 'KUBECONFIG_FILE')]) {
+                    script {
+                        // Use the variable $KUBECONFIG_FILE which points to the temp path
+                        sh "kubectl --kubeconfig ${KUBECONFIG_FILE} rollout restart deployment community-web --v=9"
+                        sh "kubectl --kubeconfig ${KUBECONFIG_FILE} rollout status deployment community-web"
+                    }
                 }
             }
         }
