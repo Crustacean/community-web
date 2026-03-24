@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-	script {
+	stage('Test Connection') {
             // Using the credentialsId you created in Jenkins
             withCredentials([usernamePassword(credentialsId: 'github-token-id', 
                              passwordVariable: 'GH_TOKEN', 
