@@ -1,10 +1,13 @@
+// Define globally so it can be shared across all stages
+def dockerImage = ''
+
 pipeline {
     agent any
 
     environment {
         REGISTRY = ""
-        // Ensure this matches your actual Docker Hub username
-        IMAGE_NAME = "em22435/community-watch-web"
+        // Enforcing lowercase to prevent registry denied errors
+        IMAGE_NAME = "em22435/community-watch-web".toLowerCase()
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
@@ -41,7 +44,7 @@ pipeline {
             }
         }
 
-	stage('Deploy to Kubernetes') {
+        stage('Deploy to Kubernetes') {
             steps {
                 script {
                     sh "kubectl rollout restart deployment community-web"
@@ -49,8 +52,6 @@ pipeline {
                 }
             }
         }
-
-
     }
 
     post {
