@@ -42,15 +42,16 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                withCredentials([file(credentialsId: 'k8s-config-id', variable: 'KUBECONFIG_FILE')]) {
-                    script {
-                        sh 'kubectl --kubeconfig ${KUBECONFIG_FILE} rollout restart deployment community-web --insecure-skip-tls-verify=true'
-                        sh 'kubectl --kubeconfig ${KUBECONFIG_FILE} rollout status deployment community-web --insecure-skip-tls-verify=true'
-                    }
-                }
-            }
-        }
+	    steps {
+		withCredentials([file(credentialsId: 'k8s-config-id', variable: 'KUBECONFIG_FILE')]) {
+		    script {
+		        // Using single quotes is more secure for secret variables
+		        sh 'kubectl --kubeconfig $KUBECONFIG_FILE rollout restart deployment community-web'
+		        sh 'kubectl --kubeconfig $KUBECONFIG_FILE rollout status deployment community-web'
+		    }
+		}
+	    }
+	}
     }
 
     post {
