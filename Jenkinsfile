@@ -45,10 +45,9 @@ pipeline {
 	    steps {
 		withCredentials([file(credentialsId: 'k8s-config-id', variable: 'KUBECONFIG_FILE')]) {
 		    script {
-		        // Using single quotes is more secure for secret variables
-			sh 'kubectl --kubeconfig $KUBECONFIG_FILE set-context --current --user=jenkins-service-account'
-		        sh 'kubectl -n dev --kubeconfig $KUBECONFIG_FILE rollout restart deployment community-web'
-		        sh 'kubectl -n dev --kubeconfig $KUBECONFIG_FILE rollout status deployment community-web'
+		        sh 'kubectl config --kubeconfig=$KUBECONFIG_FILE set-context --current --user=jenkins-service-account'
+		        sh 'kubectl rollout restart deployment community-web --namespace=dev --kubeconfig=$KUBECONFIG_FILE'
+		        sh 'kubectl rollout status deployment community-web --namespace=dev --kubeconfig=$KUBECONFIG_FILE'
 		    }
 		}
 	    }
