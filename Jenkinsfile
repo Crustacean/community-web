@@ -27,6 +27,16 @@ pipeline {
             }
         }
 
+	script {
+            // Using the credentialsId you created in Jenkins
+            withCredentials([usernamePassword(credentialsId: 'github-token-id', 
+                             passwordVariable: 'GH_TOKEN', 
+                             usernameVariable: 'GH_USER')]) {
+                
+                // Try a manual login to see the raw error message
+                sh "echo ${GH_TOKEN} | docker login ghcr.io -u ${GH_USER} --password-stdin"
+            }
+
         stage('Push to GHCR') {
             steps {
                 script {
