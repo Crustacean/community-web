@@ -12,7 +12,7 @@ kind: RoleBinding
 metadata:
   creationTimestamp: null
   name: jenkins-sa-rolebinding
-  namespace: uat
+  namespace: dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
