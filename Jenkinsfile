@@ -40,11 +40,22 @@ pipeline {
                 sh "docker rmi ${IMAGE_NAME}:latest"
             }
         }
+
+	stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh "kubectl rollout restart deployment community-web"
+                    sh "kubectl rollout status deployment community-web"
+                }
+            }
+        }
+
+
     }
 
     post {
         success {
-            echo "Successfully pushed ${IMAGE_NAME}:${IMAGE_TAG} to Docker Hub."
+            echo "Successfully pushed ${IMAGE_NAME}:${IMAGE_TAG} to Kubernetes."
         }
         failure {
             echo "Pipeline failed. Check Factor 11: Logs in the Jenkins console output."
