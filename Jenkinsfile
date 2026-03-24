@@ -22,18 +22,6 @@ pipeline {
             }
         }
 
-        stage('Test Connection') {
-            steps { // Added missing steps block
-                script { // Added script block for withCredentials
-                    withCredentials([usernamePassword(credentialsId: 'github-token-id', 
-                                     passwordVariable: 'GH_TOKEN', 
-                                     usernameVariable: 'GH_USER')]) {
-                        sh "echo ${GH_TOKEN} | docker login ghcr.io -u ${GH_USER} --password-stdin"
-                    }
-                } // Closed script
-            } // Closed steps
-        } // Closed stage
-
         stage('Push to GHCR') {
             steps {
                 script {
