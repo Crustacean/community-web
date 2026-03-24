@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  name: jenkins-service-account
+  namespace: dev
+
+---  
+  
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  name: jenkins-sa-rolebinding
+  namespace: uat
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: jenkins-sa-role
+subjects:
+- kind: ServiceAccount
+  name: jenkins-service-account
+  namespace: dev
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: jenkins-sa-role
+  namespace: dev
+rules:
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - deployments/scale
+  - deployments/status
+  verbs:
+  - get
+  - update
+  - patch
+  - list
+  - watch
+  - create
+  - delete
