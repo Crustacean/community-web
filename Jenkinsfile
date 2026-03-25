@@ -41,13 +41,13 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to Kubernetes Dev namespace') {
 	    steps {
-		withCredentials([file(credentialsId: 'k8s-config-id', variable: 'KUBECONFIG_FILE')]) {
+		withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'jenkins-serviceaccount-token', namespace: '', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.49.2:8443') {
 		    script {
-		        sh 'kubectl config --kubeconfig=$KUBECONFIG_FILE set-context --current --user=jenkins-service-account'
-		        sh 'kubectl rollout restart deployment community-web --namespace=dev --kubeconfig=$KUBECONFIG_FILE'
-		        sh 'kubectl rollout status deployment community-web --namespace=dev --kubeconfig=$KUBECONFIG_FILE'
+		    	sh "kubectl create deployment community-web --image=${IMAGE_NAME}:${IMAGE_TAG} --namespace=dev"
+		        sh "kubectl rollout restart deployment community-web --namespace=dev"
+		        sh "kubectl rollout status deployment community-web --namespace=dev"
 		    }
 		}
 	    }
