@@ -41,11 +41,19 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes Dev namespace') {
+        stage('Deploy to Dev namespace') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'jenkins-serviceaccount-token', namespace: '', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.49.2:8443') {
+                withKubeConfig(
+                    caCertificate: '', 
+                    clusterName: '', 
+                    contextName: '', 
+                    credentialsId: 'jenkins-serviceaccount-token', 
+                    namespace: '', 
+                    restrictKubeConfigAccess: false, 
+                    serverUrl: 'https://192.168.49.2:8443'
+                ) {
                     script {
-                        sh 'kubectl get ns'
+                        sh "kubectl set image deployment/community-watch-web community-watch-web=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
                     }
                 }
             }
@@ -54,10 +62,10 @@ pipeline {
 
     post {
         success {
-            echo "Successfully deployed version ${IMAGE_TAG} to the cluster. [cite: 16]"
+            echo "Successfully deployed version ${IMAGE_TAG} to the cluster."
         }
         failure {
-            echo "Pipeline failed. Review the console output for specific error details. [cite: 17]"
+            echo "Pipeline failed. Review the console output for specific error details."
         }
     }
 }
