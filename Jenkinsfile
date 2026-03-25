@@ -41,7 +41,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Dev namespace') {
+        stage('Deploy to Dev') {
             steps {
                 withKubeConfig(
                     caCertificate: '''MIIDBjCCAe6gAwIBAgIBATANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwptaW5p
@@ -70,6 +70,78 @@ ybjER0RZivXFdA==''',
                 ) {
                     script {
                         sh "kubectl set image deployment/community-watch-web community-watch-web=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
+                    }
+                }
+            }
+        }
+
+
+        stage('Promote to UAT') {
+            steps {
+                withKubeConfig(
+                    caCertificate: '''MIIDBjCCAe6gAwIBAgIBATANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwptaW5p
+a3ViZUNBMB4XDTI2MDMyNDE0NDU0OFoXDTM2MDMyMjE0NDU0OFowFTETMBEGA1UE
+AxMKbWluaWt1YmVDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALQ1
+3lFtbOkhvzPOs9bO4gchYGUDa1v3VEs6ZeyDsVuSiUKdueRlQrm49x5JppjXqq+n
+GMsPq1uFNIwog9YGurslZ0vxiuKETdMUNRCsemhAnUao4AJBqGTVc1Mlisz5/Fc7
+fBNoOmFOWNpLGhOcTmj+smbGV81OVeJ+ehKtyps4qVd83U77IAx4AOhO/nUoGSYx
+E4xGdNLhEdLbDbJv2of6CaqYjRFs79qAkLhPNEpcIRFD9oCQ9DJchhlYvHQaXSpo
+4Z9XZJoBqLw2unV6i2CYdd+tvu5XBr3ZiYZldEGWkC5t2ylRvg+TD9jM89DbUOmL
+n6E7ce/Mmyq9sGxBoasCAwEAAaNhMF8wDgYDVR0PAQH/BAQDAgKkMB0GA1UdJQQW
+MBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
+BBRUAzROVWcNCaFxASiVKjTL3kM2yTANBgkqhkiG9w0BAQsFAAOCAQEAsWGCnnS5
+x5J4aVIbkAu4+t8Kodr7tLnsFchVNkZy6OrvuZhDtQum/LADhnf4rOQRdZDA6XCr
+cDPGmq45j96Eg+fAIybwctPKnC1a9aD4Dh7UaqcX5WXNzRlX4sbAi47oubteTQy8
+mo9kSx1CSJUMhEYwu/wnvXxJLX70zWAcytySJyOt7FIKa4/cjOM1uHA5XF6en8L3
+Cuvjfd2hO6svfHCa7vbxumT/StIXjQluVIfMS8jXBnqbbadDoNRhqhZSbvlmE7Zj
+NqJjavhjkXuVRRjJlP5Dp04QwhGJM375YGxQKVUmhYZHzkDQy2+y8jCezmYLIuus
+ybjER0RZivXFdA==''', 
+                    clusterName: 'minikube', 
+                    contextName: 'minikube', 
+                    credentialsId: 'minikube-jenkins-secret', 
+                    namespace: 'dev', 
+                    restrictKubeConfigAccess: false, 
+                    serverUrl: 'https://192.168.49.2:8443'
+                ) {
+                    script {
+                        input message: "Deploy version ${IMAGE_TAG} to UAT?", ok: "Deploy to UAT"
+                        sh "kubectl create deployment community-watch-web-uat --image=${IMAGE_NAME}:${IMAGE_TAG} -n uat"
+                    }
+                }
+            }
+        }
+
+
+        stage('Promote to Prod') {
+            steps {
+                withKubeConfig(
+                    caCertificate: '''MIIDBjCCAe6gAwIBAgIBATANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwptaW5p
+a3ViZUNBMB4XDTI2MDMyNDE0NDU0OFoXDTM2MDMyMjE0NDU0OFowFTETMBEGA1UE
+AxMKbWluaWt1YmVDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALQ1
+3lFtbOkhvzPOs9bO4gchYGUDa1v3VEs6ZeyDsVuSiUKdueRlQrm49x5JppjXqq+n
+GMsPq1uFNIwog9YGurslZ0vxiuKETdMUNRCsemhAnUao4AJBqGTVc1Mlisz5/Fc7
+fBNoOmFOWNpLGhOcTmj+smbGV81OVeJ+ehKtyps4qVd83U77IAx4AOhO/nUoGSYx
+E4xGdNLhEdLbDbJv2of6CaqYjRFs79qAkLhPNEpcIRFD9oCQ9DJchhlYvHQaXSpo
+4Z9XZJoBqLw2unV6i2CYdd+tvu5XBr3ZiYZldEGWkC5t2ylRvg+TD9jM89DbUOmL
+n6E7ce/Mmyq9sGxBoasCAwEAAaNhMF8wDgYDVR0PAQH/BAQDAgKkMB0GA1UdJQQW
+MBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
+BBRUAzROVWcNCaFxASiVKjTL3kM2yTANBgkqhkiG9w0BAQsFAAOCAQEAsWGCnnS5
+x5J4aVIbkAu4+t8Kodr7tLnsFchVNkZy6OrvuZhDtQum/LADhnf4rOQRdZDA6XCr
+cDPGmq45j96Eg+fAIybwctPKnC1a9aD4Dh7UaqcX5WXNzRlX4sbAi47oubteTQy8
+mo9kSx1CSJUMhEYwu/wnvXxJLX70zWAcytySJyOt7FIKa4/cjOM1uHA5XF6en8L3
+Cuvjfd2hO6svfHCa7vbxumT/StIXjQluVIfMS8jXBnqbbadDoNRhqhZSbvlmE7Zj
+NqJjavhjkXuVRRjJlP5Dp04QwhGJM375YGxQKVUmhYZHzkDQy2+y8jCezmYLIuus
+ybjER0RZivXFdA==''', 
+                    clusterName: 'minikube', 
+                    contextName: 'minikube', 
+                    credentialsId: 'minikube-jenkins-secret', 
+                    namespace: 'dev', 
+                    restrictKubeConfigAccess: false, 
+                    serverUrl: 'https://192.168.49.2:8443'
+                ) {
+                    script {
+                        input message: "Deploy version ${IMAGE_TAG} to UAT?", ok: "Deploy to PROD"
+                        sh "kubectl create deployment community-watch-web-prod --image=${IMAGE_NAME}:${IMAGE_TAG} -n prod"
                     }
                 }
             }
