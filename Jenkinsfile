@@ -69,7 +69,7 @@ ybjER0RZivXFdA==''',
                     serverUrl: 'https://192.168.49.2:8443'
                 ) {
                     script {
-                        sh "kubectl get ns"
+                        sh "kubectl get deploy"
                     }
                 }
             }
