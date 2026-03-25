@@ -45,9 +45,7 @@ pipeline {
 	    steps {
 		withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'jenkins-serviceaccount-token', namespace: '', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.49.2:8443') {
 		    script {
-		    	sh "kubectl create deployment community-web --image=${IMAGE_NAME}:${IMAGE_TAG} --namespace=dev"
-		        sh "kubectl rollout restart deployment community-web --namespace=dev"
-		        sh "kubectl rollout status deployment community-web --namespace=dev"
+			sh 'kubectl get ns'
 		    }
 		}
 	    }
