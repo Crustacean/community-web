@@ -69,7 +69,7 @@ ybjER0RZivXFdA==''',
                     serverUrl: 'https://192.168.49.2:8443'
                 ) {
                     script {
-                        sh "kubectl create deployment community-watch-web --image=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
+                        sh "kubectl set image deployment/community-watch-web community-watch-web=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
                     }
                 }
             }
