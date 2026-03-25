@@ -42,14 +42,14 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes Dev namespace') {
-	    steps {
-		withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'jenkins-serviceaccount-token', namespace: '', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.49.2:8443') {
-		    script {
-			sh 'kubectl get ns'
-		    }
-		}
-	    }
-	}
+            steps {
+                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'jenkins-serviceaccount-token', namespace: '', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.49.2:8443') {
+                    script {
+                        sh 'kubectl get ns'
+                    }
+                }
+            }
+        }
     }
 
     post {
