@@ -69,7 +69,14 @@ ybjER0RZivXFdA==''',
                     serverUrl: 'https://192.168.49.2:8443'
                 ) {
                     script {
-                        sh "kubectl set image deployment/community-watch-web community-watch-web=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
+                        try {
+                            // Attempt to create the deployment initially 
+                            sh "kubectl create deployment community-watch-web --image=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
+                        } catch (Exception e) {
+                            // If it exists, update the image instead 
+                            echo "Deployment already exists in dev, applying image update..."
+                            sh "kubectl set image deployment/community-watch-web community-watch-web=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
+                        }
                     }
                 }
             }
@@ -105,7 +112,12 @@ ybjER0RZivXFdA==''',
                 ) {
                     script {
                         input message: "Deploy version ${IMAGE_TAG} to UAT?", ok: "Deploy to UAT"
-                        sh "kubectl create deployment community-watch-web-uat --image=${IMAGE_NAME}:${IMAGE_TAG} -n uat"
+                        try {
+                            sh "kubectl create deployment community-watch-web-uat --image=${IMAGE_NAME}:${IMAGE_TAG} -n uat"
+                        } catch (Exception e) {
+                            echo "Deployment already exists in uat, applying image update..."
+                            sh "kubectl set image deployment/community-watch-web-uat community-watch-web-uat=${IMAGE_NAME}:${IMAGE_TAG} -n uat"
+                        }
                     }
                 }
             }
@@ -141,7 +153,12 @@ ybjER0RZivXFdA==''',
                 ) {
                     script {
                         input message: "Deploy version ${IMAGE_TAG} to UAT?", ok: "Deploy to PROD"
-                        sh "kubectl create deployment community-watch-web-prod --image=${IMAGE_NAME}:${IMAGE_TAG} -n prod"
+                        try {
+                            sh "kubectl create deployment community-watch-web-prod --image=${IMAGE_NAME}:${IMAGE_TAG} -n prod" [cite: 37]
+                        } catch (Exception e) {
+                            echo "Deployment already exists in prod, applying image update..."
+                            sh "kubectl set image deployment/community-watch-web-prod community-watch-web-prod=${IMAGE_NAME}:${IMAGE_TAG} -n prod"
+                        }
                     }
                 }
             }
