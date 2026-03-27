@@ -113,7 +113,7 @@ ybjER0RZivXFdA==''',
                     script {
                         input message: "Deploy version ${IMAGE_TAG} to UAT?", ok: "Deploy to UAT"
                         try {
-                            sh "kubectl create deployment community-watch-web-uat --image=${IMAGE_NAME}:${IMAGE_TAG} -n uat"
+                            sh "kubectl create deployment community-watch-web-uat --image=${IMAGE_NAME}:${IMAGE_TAG} -n uat --replicas=2"
                         } catch (Exception e) {
                             echo "Deployment already exists in uat, applying image update..."
                             sh "kubectl set image deployment/community-watch-web-uat community-watch-web-uat=${IMAGE_NAME}:${IMAGE_TAG} -n uat"
@@ -154,7 +154,7 @@ ybjER0RZivXFdA==''',
                     script {
                         input message: "Deploy version ${IMAGE_TAG} to PROD?", ok: "Deploy to PROD"
                         try {
-                            sh "kubectl create deployment community-watch-web-prod --image=${IMAGE_NAME}:${IMAGE_TAG} -n prod"
+                            sh "kubectl create deployment community-watch-web-prod --image=${IMAGE_NAME}:${IMAGE_TAG} -n prod --replicas=5"
                         } catch (Exception e) {
                             echo "Deployment already exists in prod, applying image update..."
                             sh "kubectl set image deployment/community-watch-web-prod community-watch-web-prod=${IMAGE_NAME}:${IMAGE_TAG} -n prod"
