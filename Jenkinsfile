@@ -70,10 +70,10 @@ ybjER0RZivXFdA==''',
                 ) {
                     script {
                         try {
-                            // Attempt to create the deployment initially 
+                            // Attempt to create the deployment initially, if it doesn't exist
                             sh "kubectl create deployment community-watch-web-dev --image=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
                         } catch (Exception e) {
-                            // If it exists, update the image instead 
+                            // If it exists, update the image instead
                             echo "Deployment already exists in dev, applying image update..."
                             sh "kubectl set image deployment/community-watch-web-dev community-watch-web-dev=${IMAGE_NAME}:${IMAGE_TAG} -n dev"
                         }
