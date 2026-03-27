@@ -152,9 +152,9 @@ ybjER0RZivXFdA==''',
                     serverUrl: 'https://192.168.49.2:8443'
                 ) {
                     script {
-                        input message: "Deploy version ${IMAGE_TAG} to UAT?", ok: "Deploy to PROD"
+                        input message: "Deploy version ${IMAGE_TAG} to PROD?", ok: "Deploy to PROD"
                         try {
-                            sh "kubectl create deployment community-watch-web-prod --image=${IMAGE_NAME}:${IMAGE_TAG} -n prod" [cite: 37]
+                            sh "kubectl create deployment community-watch-web-prod --image=${IMAGE_NAME}:${IMAGE_TAG} -n prod"
                         } catch (Exception e) {
                             echo "Deployment already exists in prod, applying image update..."
                             sh "kubectl set image deployment/community-watch-web-prod community-watch-web-prod=${IMAGE_NAME}:${IMAGE_TAG} -n prod"
