@@ -111,7 +111,16 @@ pipeline {
                     restrictKubeConfigAccess: false,
                     serverUrl: env.KUBE_SERVER_URL) {
                     script {
-                        sh "envsubst < community-watch-web-dev.yaml > prepared-dev.yaml"
+                        // Define the variables within the shell environment for envsubst
+                        // IMAGE_NAME and IMAGE_TAG are already in your global env block
+                        // 1. Use envsubst to swap variables in the YAML
+                        // 2. Apply the resulting configuration
+                        sh """
+                            export APP_NAME="community-watch"
+                            export DEPLOYMENT_NAME="community-watch-web-dev"
+                            export CONTAINER_NAME="community-watch-web"
+                            envsubst < community-watch-web-dev.yaml > prepared-dev.yaml
+                        """
                         sh "kubectl apply -f prepared-dev.yaml"
                     }
                 }
@@ -134,7 +143,16 @@ pipeline {
                     serverUrl: env.KUBE_SERVER_URL) {
                     script {
                         input message: "Deploy version ${IMAGE_TAG} to UAT?", ok: "Deploy to UAT"
-                        sh "envsubst < community-watch-web-uat.yaml > prepared-uat.yaml"
+                        // Define the variables within the shell environment for envsubst
+                        // IMAGE_NAME and IMAGE_TAG are already in your global env block
+                        // 1. Use envsubst to swap variables in the YAML
+                        // 2. Apply the resulting configuration
+                        sh """
+                            export APP_NAME="community-watch"
+                            export DEPLOYMENT_NAME="community-watch-web-uat"
+                            export CONTAINER_NAME="community-watch-web"
+                            envsubst < community-watch-web-uat.yaml > prepared-uat.yaml
+                        """
                         sh "kubectl apply -f prepared-uat.yaml"
                     }
                 }
@@ -157,7 +175,16 @@ pipeline {
                     serverUrl: env.KUBE_SERVER_URL) {
                     script {
                         input message: "Deploy version ${IMAGE_TAG} to PROD?", ok: "Deploy to PROD"
-                        sh "envsubst < community-watch-web-prod.yaml > prepared-prod.yaml"
+                        // Define the variables within the shell environment for envsubst
+                        // IMAGE_NAME and IMAGE_TAG are already in your global env block
+                        // 1. Use envsubst to swap variables in the YAML
+                        // 2. Apply the resulting configuration
+                        sh """
+                            export APP_NAME="community-watch"
+                            export DEPLOYMENT_NAME="community-watch-web-prod"
+                            export CONTAINER_NAME="community-watch-web"
+                            envsubst < community-watch-web-prod.yaml > prepared-prod.yaml
+                        """
                         sh "kubectl apply -f prepared-prod.yaml"
                     }
                 }
