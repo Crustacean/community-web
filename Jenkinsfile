@@ -73,12 +73,18 @@ ybjER0RZivXFdA==''',
                 ) {
                     script {
                         try {
-                            // Attempt to create the deployment initially, if it doesn't exist
-                            sh "kubectl create deployment community-watch-web-sandbox --image=${IMAGE_NAME}:${IMAGE_TAG} -n sandbox"
+                            // Define the dynamic values
+                            env.APP_NAME = "community-watch"
+                            env.DEPLOYMENT_NAME = "community-watch-web-sandbox"
+                            env.CONTAINER_NAME = "community-watch-web"
+                            // IMAGE_NAME and IMAGE_TAG are already in your global env block
+
+                            // 1. Use envsubst to swap variables in the YAML
+                            // 2. Apply the resulting configuration
+                            sh "envsubst < community-watch-web-sandbox.yaml > prepared-sandbox.yaml"
+                            sh "kubectl apply -f prepared-sandbox.yaml"
                         } catch (Exception e) {
-                            // If it exists, update the image instead 
-                            echo "Deployment already exists in sandbox, applying image update..."
-                            sh "kubectl set image deployment/community-watch-web-sandbox community-watch-web=${IMAGE_NAME}:${IMAGE_TAG} -n sandbox"
+                            echo "A error occurred while applying image update..."
                         }
                     }
                 }
