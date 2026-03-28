@@ -6,7 +6,7 @@ metadata:
   name: $DEPLOYMENT_NAME
   namespace: prod
 spec:
-  replicas: 10
+  replicas: 5
   selector:
     matchLabels:
       app: $APP_NAME
@@ -63,7 +63,7 @@ spec:
     kind: Deployment
     name: $DEPLOYMENT_NAME
   minReplicas: 2
-  maxReplicas: 10
+  maxReplicas: 20
   metrics:
     - type: ContainerResource
       containerResource:
