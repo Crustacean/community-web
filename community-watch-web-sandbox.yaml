@@ -6,7 +6,7 @@ metadata:
   name: $DEPLOYMENT_NAME
   namespace: sandbox
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: $APP_NAME
