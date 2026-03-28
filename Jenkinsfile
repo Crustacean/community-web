@@ -116,7 +116,7 @@ pipeline {
                         // 1. Use envsubst to swap variables in the YAML
                         // 2. Apply the resulting configuration
                         sh """
-                            export APP_NAME="community-watch"
+                            export APP_NAME="community-watch-web-dev"
                             export DEPLOYMENT_NAME="community-watch-web-dev"
                             export CONTAINER_NAME="community-watch-web"
                             envsubst < community-watch-web-dev.yaml > prepared-dev.yaml
@@ -148,7 +148,7 @@ pipeline {
                         // 1. Use envsubst to swap variables in the YAML
                         // 2. Apply the resulting configuration
                         sh """
-                            export APP_NAME="community-watch"
+                            export APP_NAME="community-watch-web-uat"
                             export DEPLOYMENT_NAME="community-watch-web-uat"
                             export CONTAINER_NAME="community-watch-web"
                             envsubst < community-watch-web-uat.yaml > prepared-uat.yaml
@@ -180,7 +180,7 @@ pipeline {
                         // 1. Use envsubst to swap variables in the YAML
                         // 2. Apply the resulting configuration
                         sh """
-                            export APP_NAME="community-watch"
+                            export APP_NAME="community-watch-web-prod"
                             export DEPLOYMENT_NAME="community-watch-web-prod"
                             export CONTAINER_NAME="community-watch-web"
                             envsubst < community-watch-web-prod.yaml > prepared-prod.yaml
