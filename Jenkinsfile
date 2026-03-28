@@ -183,6 +183,7 @@ pipeline {
                             export APP_NAME="community-watch-web-prod"
                             export DEPLOYMENT_NAME="community-watch-web-prod"
                             export CONTAINER_NAME="community-watch-web"
+                            export HPA_NAME="community-watch-web-prod-hpa"
                             envsubst < community-watch-web-prod.yaml > prepared-prod.yaml
                         """
                         sh "kubectl apply -f prepared-prod.yaml"
