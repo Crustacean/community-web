@@ -63,7 +63,7 @@ spec:
     kind: Deployment
     name: $DEPLOYMENT_NAME
   minReplicas: 2
-  maxReplicas: 10
+  maxReplicas: 20
   metrics:
     - type: ContainerResource
       containerResource:
