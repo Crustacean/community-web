@@ -81,7 +81,7 @@ pipeline {
                     script {
 
                         // Define the dynamic values
-                        env.APP_NAME = "community-watch"
+                        env.APP_NAME = "community-watch-web-sandbox"
                         env.DEPLOYMENT_NAME = "community-watch-web-sandbox"
                         env.CONTAINER_NAME = "community-watch-web"
                         // IMAGE_NAME and IMAGE_TAG are already in your global env block
