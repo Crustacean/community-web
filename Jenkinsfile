@@ -79,6 +79,16 @@ pipeline {
                     restrictKubeConfigAccess: false,
                     serverUrl: env.KUBE_SERVER_URL) {
                     script {
+
+                        // Define the dynamic values
+                        env.APP_NAME = "community-watch"
+                        env.DEPLOYMENT_NAME = "community-watch-web-sandbox"
+                        env.CONTAINER_NAME = "community-watch-web"
+                        // IMAGE_NAME and IMAGE_TAG are already in your global env block
+
+                        // 1. Use envsubst to swap variables in the YAML
+                        // 2. Apply the resulting configuration
+
                         sh "envsubst < community-watch-web-sandbox.yaml > prepared-sandbox.yaml"
                         sh "kubectl apply -f prepared-sandbox.yaml"
                     }
