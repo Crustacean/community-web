@@ -4,9 +4,9 @@ metadata:
   labels:
     app: $APP_NAME
   name: $DEPLOYMENT_NAME
-  namespace: sandbox
+  namespace: uat
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: $APP_NAME
